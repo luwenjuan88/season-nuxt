@@ -1,0 +1,353 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>币圈牛市</title><style>p {
+	font-size: 15px;
+	line-height: 32px;
+	color: #595959;
+	font-family: 微软雅黑；
+}
+
+p {
+	padding: 5px 0
+}
+
+pre, code {
+	font-size: 14px;
+	font-family: Roboto, 'Courier New', Consolas, Inconsolata, Courier, monospace;
+}
+
+code {
+	margin: 0 3px;
+	padding: 0 6px;
+	white-space: pre-wrap;
+	background-color: #F8F8F8;
+	border-radius: 2px;
+	display: inline;
+}
+
+pre {
+	font-size: 15px;
+	line-height: 20px;
+}
+
+pre code {
+	white-space: pre;
+	overflow: auto;
+	border-radius: 3px;
+	padding: 5px 10px;
+	display: block !important;
+}
+
+strong, b {
+	color: #BF360C;
+}
+
+em, i {
+	color: #009688;
+}
+
+big {
+	font-size: 22px;
+	color: #009688;
+	font-weight: bold;
+	vertical-align: middle;
+	border-bottom: 1px solid #eee;
+}
+
+small {
+	font-size: 12px;
+	line-height: 22px;
+}
+
+hr {
+	border-bottom: 0.05em dotted #eee;
+	margin: 10px auto;
+}
+
+p {
+	margin: 20px
+}
+
+table, pre, dl, blockquote, q, ul, ol {
+	margin: 10px 5px;
+}
+
+ul, ol {
+	padding-left: 10px;
+}
+
+li {
+	margin: 5px;
+}
+
+lip {
+	margin: 5px 0!important;
+}
+
+ul ul, ul ol, ol ul, ol ol {
+	margin: 0;
+	padding-left: 10px;
+}
+
+ol ol, ul ol {
+	list-style-type: lower-roman;
+}
+
+ul ul ol, ul ol ol, ol ul ol, ol ol ol {
+	list-style-type: lower-alpha;
+}
+
+dl {
+	padding: 0;
+}
+
+dl dt {
+	font-size: 1em;
+	font-weight: bold;
+	font-style: italic;
+}
+
+dl dd {
+	margin: 0 0 10px;
+	padding: 0 10px;
+}
+
+blockquote, q {
+	border-left: 3px solid #009688;
+	padding: 0 10px;
+	color: #777;
+	quotes: none;
+	margin: 30px 10px 30px 30px;
+}
+
+blockquote::before, blockquote::after, q::before, q::after {
+	content: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 40px 20px 40px;
+	padding: 20;
+	font-weight: bold;
+	color: #009688;
+}
+
+h1 {
+	font-size: 22px;
+	border-bottom: 4px solid #ddd;
+}
+
+h2 {
+	font-size: 20px;
+	border-bottom: 4px solid #eee;
+}
+
+h3 {
+	font-size: 18px;
+	text-align: center;
+}
+
+h4 {
+	font-size: 18px;
+}
+
+h5 {
+	font-size: 16px;
+}
+
+h6 {
+	font-size: 16px;
+	color: #777;
+}
+
+table {
+	padding: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 1em;
+	font: inherit;
+	border: 0;
+}
+
+tbody {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+table tr {
+	border: 0;
+	border-top: 1px solid #CCC;
+	background-color: white;
+	margin: 0;
+	padding: 0;
+}
+
+table tr:nth-child(2n) {
+	background-color: #F8F8F8;
+}
+
+table tr th, table tr td {
+	font-size: 16px;
+	border: 1px solid #CCC;
+	margin: 0;
+	padding: 5px10px;
+}
+
+table tr th {
+	font-weight: bold;
+	background-color: #F0F0F0;
+}
+
+body {
+	font-size: 15px !important
+}</style><style>.mweb-charts{background:#fff;}
+body{ box-sizing: border-box;
+    margin: 0 auto;}
+@media print{
+    pre, code, pre code {
+     overflow: visible !important;
+     white-space: pre-wrap !important;       /* css-3 */
+     white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+     white-space: -pre-wrap !important;      /* Opera 4-6 */
+     white-space: -o-pre-wrap !important;    /* Opera 7 */
+     word-wrap: break-word !important;       /* Internet Explorer 5.5+ */
+    }
+    html,body{margin:0;padding:4px;}
+}
+
+
+
+div.code-toolbar {
+  position: relative;
+}
+
+div.code-toolbar > .toolbar {
+  position: absolute;
+  z-index: 10;
+  top: .3em;
+  right: .2em;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+div.code-toolbar:hover > .toolbar {
+  opacity: 1;
+}
+
+/* Separate line b/c rules are thrown out if selector is invalid.
+   IE11 and old Edge versions don't support :focus-within. */
+div.code-toolbar:focus-within > .toolbar {
+  opacity: 1;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item {
+  display: inline-block;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a {
+  cursor: pointer;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-user-select: none; /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a,
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+  color: inherit;
+  font-size: .8em;
+  padding: 4px .5em;
+  background: #f5f2f0;
+  background: rgba(224, 224, 224, 0.4);
+  box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
+  border-radius: .5em;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus {
+  color: inherit;
+  text-decoration: none;
+}
+</style> </head><body><div id='markdown_content' class='markdown-body'><h1><a id="%E5%B8%81%E5%9C%88%E7%89%9B%E5%B8%82%E5%A6%82%E4%BD%95%E8%B5%9A%E9%92%B1%EF%BC%9F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>币圈牛市如何赚钱？</h1>
+<h2><a id="%E5%B8%81%E5%B8%82%E8%B5%9A%E9%92%B1%E7%9A%84%E9%80%BB%E8%BE%91" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>币市赚钱的逻辑</h2>
+<p>币市是<strong>零和博弈</strong>，是一部分人赚另一部分人的钱，赚钱的占5%，亏钱的占95%，所以赚钱的会赚很多，亏钱的会亏很多。</p>
+<p>币市赚钱的逻辑，是由两个因素共同作用的：</p>
+<blockquote>
+<p>币市的周期：四年一个牛熊</p>
+<p>币市的人群：普遍不是专业选手，大部分是小白</p>
+</blockquote>
+<p><strong>1.币市的周期</strong></p>
+<p>币市每四年一个牛熊，我发现有一个很神奇的现象：</p>
+<blockquote>
+<p>所有人都知道牛市大概是在哪个时间段，但反而大部分人在牛市赚不到钱，或者赚到钱后在牛末亏钱甚至破产</p>
+</blockquote>
+<p>我前一段时间是很好奇为什么的，然后我在一个群里面观察，我自己也亲身进去感受，我意识到了原因：</p>
+<p>主力会利用所有人都知道牛市的这个事实，去操纵市场，所以牛初会有很多新项目冒出来，疯狂上涨，散户一看到，就会又兴奋又惊慌，觉得牛市来了，于是疯狂入场，紧接着就会砸盘，先割一拨人；</p>
+<p>主力砸盘的目的是为了收低价筹码，因为主力资金太大，一次性买肯定就把价格一下子推高了，自己成本也会高，所以只能分批买，通过砸盘收低价筹码。</p>
+<p>砸盘有两种情况：</p>
+<blockquote>
+<p>一种是散户会觉得牛市回调很正常，肯定会涨上来的，于是就加仓，结果把所有钱都加完了，还在跌，散户就撑不住了，决定割肉</p>
+<p>割完后，主力达到了把散户吓下车的目的，又开始拉盘，散户又疯了，不服想把钱赚回来；</p>
+<p>另一种是散户会觉得不会要归零了吧，因为在币市归零的币也不是没有，又被吓下车，主力觉得差不多了就拉盘，牛初这种疯狂上蹿下跳的情况非常常见；</p>
+</blockquote>
+<p>在牛初把散户吓得差不多了，后面真正进入大牛市的时候，就会有两种情况：</p>
+<p>情况一：散户可能一开始不敢入场了，所以散户把筹码吓丢掉之后，一开始手上没有筹码，一直在观望，币涨上来之后，散户感觉币在高位，也不敢入场，但是等币涨到不可思议的地步后，实在忍不住还是要入场，这个时候已经是高位接盘了，这个其实就是在玩人心，把不敢入场的散户吸引到市场上接盘，主力在把控那个度，散户接完盘，主力就慢慢在撤退；</p>
+<p>情况二：或者说手上有筹码的散户，看到币已经涨了很多，就会忍不住要把手上的币卖掉，于是就失去了筹码，再重复情况一；</p>
+<p>在牛末的时候，当主力慢慢撤退时，前面因为已经回撤多次，散户以为是正常回撤，正常回撤都是会加仓的，于是就加仓，主力可能会小拉几次，以此鼓励散户加仓，自己忙着出货，散户加着加着发现套在高位再也回不去了。</p>
+<p>在这样的操作下，牛市依然大部分散户赚不到钱，或者赚到钱的散户也会亏回去。</p>
+<p>所以应对主力这些操作的方法就是，<strong>分散仓位，定好计划，并严格按照计划执行</strong></p>
+<p><strong>分散仓位</strong>的目的是防止个别币种归零，这种情况牛市很少，但是也要防范，也是在做风险管理；</p>
+<p><strong>按照计划执行</strong>的目的是不受市场情绪影响，在心仪的区域买完币之后，整个牛市保证不下车，在牛末慢慢撤退；</p>
+<p>如果真的好好利用币市的周期，在熊市不操作，牛初积累筹码，牛末撤退，那每四年都有一次赚大钱的机会。</p>
+<p><strong>2.币市的人群</strong></p>
+<p>币市人群普遍不是专业选手，而是小白。</p>
+<p>这一现象的产生，是由三个因素造成的：</p>
+<p>原因一：币市有很多造富神话，而且都是一些什么都没有，什么都不懂的人，在币市赚很多钱的神话，就会导致这一类人涌向币市，尤其是在牛市，这些不排除是某些人故意散布的</p>
+<p>原因二：专业选手不愿意过来，因为太新了，风险太大了，但这只是短期现象，慢慢的专业选手也会进入，那个时候红利就会慢慢消失</p>
+<p>原因三：大的机构想赚钱，其实在推动这一现象的产生，有时候看似严格，又故意放一点水，因为最能明目张胆搞钱的地方，其实就是币市，比特币排名前面的持有者，其实不是个人或者普通的机构，所以不管是每四年一次牛市，还是散户傻白甜多的币圈，都是故意造就的。</p>
+<p>所以对手是弱的。</p>
+<p>因为币市是零和博弈，注定了一些人赚另一些人的钱，也就是两方PK，对手弱自己的胜算肯定更大，所以相对股市而言（股市整体素质高，动不动就博士硕士，还会各种学习，也有各种机构都在里面很多年了，进股市就是和这些人博弈），币市其实胜算更大的；</p>
+<p>进来的散户，唯一不了解的是：币市确实可以很赚钱，但也可以很亏钱，而且赚钱的人占5%，亏钱的占95%，而且他们进来恰好是送那95%人头的。</p>
+<h2><a id="%E6%95%A3%E6%88%B7fomo%E6%83%85%E7%BB%AA" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>散户fomo情绪</h2>
+<p>我为了感受散户的水平，我有去散户群里面待了1个月，发现这群人的行为模式是这样的：</p>
+<blockquote>
+<p>哇，这个币涨了这么多，要不要跟</p>
+<p>不行，咬牙跟了，100倍，1万倍，加油</p>
+<p>啊，跌了，爆仓了，垃圾币</p>
+<p>币市就是个傻逼</p>
+</blockquote>
+<p>你无法想象他们怎么那么可笑，甚至你自己都会成为可笑的一部分。</p>
+<p>因为只要你跟了这个节奏，亏钱是必须的，而且不管你多么厉害理性，你只要进入那个情绪，就会按照那个行为模式行动，不知道自己为什么买，也不知道自己为什么卖，没有计划，没有脑子。</p>
+<p>比如，你买了，然后跌了，受群里的情绪影响，你是真的无比想要割肉，而且不割肉睡不着的那种，这也正是主力想达到的目的，你割肉他就拿到了低价筹码，紧接着他就开始拉。</p>
+<p>因为我对情绪是又敏感又排斥的，我不喜欢一个很有情绪的场合，也不喜欢自己有情绪，所以我会避免这样的事情，就很快离开了这些群。</p>
+<h2><a id="%E5%B8%81%E5%B8%82%E7%89%9B%E5%B8%82%E8%B5%9A%E9%92%B1%E7%9A%84%E7%AD%96%E7%95%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>币市牛市赚钱的策略</h2>
+<p>关键是几个字：<strong>严格执行计划，不要下车</strong></p>
+<p>原因有以下几点：</p>
+<p>原因一：币市是有主力操控市场的，主力肯定是想在拉价格前把散户吓下车，以及在高位的时候，有散户接盘，所以币价肯定会做妖，要么吓跑散户，要么激起散户的欲望，如果不严格执行计划，就会被市场情绪影响</p>
+<p>原因二：其实当前的位置也不高，牛市目前还是在初期，等到牛顶肯定是比现在的价格高很多，所以只要在一个相对低的区域，严格分层买入，一直持有到牛末逐渐卖出，必然是盈利的</p>
+<p>原因三：因为牛市赚钱是必然的，不像熊市必须要谨慎，所以不要下车</p>
+<p>所以在Season量化中，务必先做好仓位规划，然后埋伏买入，把盈利比例调高一些。</p>
+<p>如果已经游刃有余，想要吃一些波段，更大化资金利用率的话，可以时刻保持关注，并随时调整参数；如果不熟悉，那么布局好低位币后，不再去看。</p>
+<h2><a id="k%E7%BA%BF%E7%9A%84%E6%9C%AC%E8%B4%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>K线的本质</h2>
+<p>我们看到的k线，是上上下下价格的变化，其实k线的本质体现了<strong>供需关系的pk</strong>，是两方的对阵，这两方是买方和卖方</p>
+<p>所以这个市场就是一场pk，就看你是在赢得一方还是输的一方，要研究对手，了解自己的赢率是多少，选择赢率高的市场。</p>
+<p>当买盘不强，卖盘很强时，证明了价格会比较难上去，如果价格也下不来，证明双方持平，如果一直突破不了，证明卖盘在削弱，买盘意愿度增强</p>
+<p>我感觉币市是没有资源的普通人赚到钱的为数不多的路径</p>
+<p>因为普通人在其他地方，一试错就需要耗费很多时间，没试几次错，青春已经过完了，机会成本太高了，有钱人可以直接砸钱加速试错，但普通人没这个条件</p>
+<p>但是币市的变动很快，所以机会很多，有足够的机会去尝试试错，错了一次，下一次机会也会很快就来。</p>
+<p>但前提是这个普通人，她准备好了短时间去应对很多变化，并且情绪上接受这样的变化，而不是失败一次就被情绪控制，因为机会很多，只要在车上，变化代表试错机会，币市一天，人间一年，就是从变化来说的</p>
+<p>币市其实没有股市风险高，币市只是变化快，所以你就算被套住，也能很快解套，但是股市被套住，你看看下一个牛市要等到什么时候。</p>
+<p>大概就这样。</p>
+</div></body></html>
