@@ -128,6 +128,7 @@ import {
 } from "../server/service/token";
 import { SECTIONS } from "../server/config/vars";
 import { Chart, registerables } from "chart.js";
+import { getSectionInfoMap } from "../server/service/token.js";
 
 Chart.register(...registerables);
 const lineChart = ref(null);
@@ -135,6 +136,8 @@ const lineChart = ref(null);
 const pairTokens = ref([]);
 const pairTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 const tabValue = ref("AI");
+
+const sectionInfo = ref({});
 
 const dataFormat = (row: [], column: { property: number }) => {
     return new Date(row[column.property]).toLocaleString();
@@ -197,6 +200,30 @@ const postUserToken = (val: object) => {
                     message: res.message,
                     type: "success",
                 });
+                findTokenPairsByPage(tabValue.value);
+            }
+        }
+    });
+};
+
+const getSectionData = () => {
+    getSectionInfoMap().then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                sectionInfo.value = {};
+            } else {
+                if (res.data) {
+                    sectionInfo.value = res.data;
+                }
+                useState("sectionInfo", () => {
+                    return res.data;
+                });
             }
         }
     });
@@ -204,6 +231,7 @@ const postUserToken = (val: object) => {
 
 onMounted(() => {
     findTokenPairsByPage(tabValue.value);
+    getSectionData();
 
     const ctx = lineChart.value.getContext("2d");
     const data = {

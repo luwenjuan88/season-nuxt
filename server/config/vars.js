@@ -147,6 +147,12 @@ const SECTIONS = [
         label: "L2",
         desc: "L2板块：Web3基础设施",
     },
+    {
+        id: 8,
+        value: "Sol",
+        label: "Sol",
+        desc: "Sol生态：最近比较火",
+    },
 ];
 
 export {

@@ -71,13 +71,18 @@
                         align="center"
                     ></el-table-column>
                     <el-table-column
-                        prop="instId"
-                        label="交易对"
+                        prop="tokenName"
+                        label="代币名称"
                         align="center"
                     ></el-table-column>
                     <el-table-column
                         prop="price"
                         label="当前价格"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="num"
+                        label="AI推荐次数"
                         align="center"
                     ></el-table-column>
                     <!-- <el-table-column
@@ -154,8 +159,8 @@
                         align="center"
                     ></el-table-column>
                     <el-table-column
-                        prop="instId"
-                        label="交易对"
+                        prop="tokenName"
+                        label="代币名称"
                         align="center"
                     ></el-table-column>
                     <el-table-column
@@ -237,8 +242,8 @@
                         align="center"
                     ></el-table-column>
                     <el-table-column
-                        prop="instId"
-                        label="交易对"
+                        prop="tokenName"
+                        label="代币名称"
                         align="center"
                     ></el-table-column>
                     <el-table-column
@@ -270,21 +275,10 @@
                     >
                         <template #default="{ row }">
                             <el-button
-                                v-if="row.isUserToken"
-                                :key="1"
-                                type="text"
-                                size="small"
-                                disabled
-                            >
-                                收藏
-                            </el-button>
-                            <el-button
-                                v-else
-                                :key="2"
                                 type="text"
                                 size="small"
                                 @click="postUserToken(row)"
-                                >收藏</el-button
+                                >取消收藏</el-button
                             >
                         </template>
                     </el-table-column>
@@ -332,6 +326,7 @@ import {
     findAllGoodTokensByPage,
     findTokenPairListByPage,
     findUserTokenListByPage,
+    deleteUserToken,
 } from "../server/service/token";
 
 const pairTokens = ref([]);
@@ -343,6 +338,8 @@ const goodTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 const userTokens = ref([]);
 const userTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 
+const tabValue = ref("ALL");
+
 const dataFormat = (row: [], column: { property: number }) => {
     return new Date(row[column.property]).toLocaleString();
 };
@@ -350,13 +347,26 @@ const dataFormat = (row: [], column: { property: number }) => {
 const changeTab = (val: number) => {
     console.log(val);
     if (val == 0) {
+        tabValue.value = "ALL";
         findTokenPairsByPage();
     } else if (val == 1) {
+        tabValue.value = "GOOD";
         findGoodTokensByPage();
     } else if (val == 2) {
+        tabValue.value = "USER";
         findUserTokensByPage();
     } else {
         console.log("error");
+    }
+};
+
+const findTokenList = () => {
+    if (tabValue.value == "ALL") {
+        findTokenPairsByPage();
+    } else if (tabValue.value == "GOOD") {
+        findGoodTokensByPage();
+    } else if (tabValue.value == "USER") {
+        findUserTokensByPage();
     }
 };
 
@@ -472,12 +482,34 @@ const postUserToken = (val: object) => {
                     message: res.message,
                     type: "success",
                 });
+                findTokenList();
+            }
+        }
+    });
+};
+
+const removeUserToken = (val: object) => {
+    deleteUserToken(val).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code > 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: "success",
+                });
+                findTokenList();
             }
         }
     });
 };
 
 onMounted(() => {
-    findTokenPairsByPage();
+    findTokenList();
 });
 </script>

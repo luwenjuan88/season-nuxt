@@ -2,6 +2,49 @@ import axios from "axios";
 import { getCookie } from "~/assets/js/utils/tools";
 import { BASE_URL } from "../config/vars";
 
+export function getTopNAiTokens(num) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.get(
+        BASE_URL + "/season-market-service/market/getTopNAiTokens?num=" + num,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
+export function getSectionInfoMap() {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.get(
+        BASE_URL + "/season-market-service/market/getSectionInfoMap",
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
+export function deleteUserToken(data) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.post(
+        BASE_URL + "/season-user-service/token/deleteUserToken",
+        data,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
 export function addUserToken(data) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));
