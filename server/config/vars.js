@@ -110,7 +110,83 @@ const IS_LIMITS = [
     },
 ];
 
+const IS_HIDES = [
+    {
+        id: 1,
+        value: 0,
+        label: "滚仓",
+    },
+    {
+        id: 2,
+        value: 1,
+        label: "埋伏",
+    },
+];
+
+const IS_REWARDUS = [
+    {
+        id: 1,
+        value: 0,
+        label: "赚币",
+    },
+    {
+        id: 2,
+        value: 1,
+        label: "赚U",
+    },
+];
+
 const SECTIONS = [
+    {
+        id: 2,
+        value: "AI",
+        label: "AI",
+        desc: "AI板块：人工智能",
+    },
+    {
+        id: 3,
+        value: "Depin",
+        label: "Depin",
+        desc: "Depin板块：硬件基础设施",
+    },
+    {
+        id: 4,
+        value: "Game",
+        label: "Game",
+        desc: "游戏板块",
+    },
+    {
+        id: 5,
+        value: "Meme",
+        label: "Meme",
+        desc: "Meme板块：概念币",
+    },
+    {
+        id: 6,
+        value: "Rwa",
+        label: "Rwa",
+        desc: "Rwa板块：现实世界虚拟资产",
+    },
+    {
+        id: 7,
+        value: "L2",
+        label: "L2",
+        desc: "L2板块：Web3基础设施",
+    },
+    {
+        id: 8,
+        value: "Sol",
+        label: "Sol",
+        desc: "Sol生态：最近比较火",
+    },
+];
+
+const SELECT_SECTIONS = [
+    {
+        id: 1,
+        value: "All",
+        label: "All",
+    },
     {
         id: 2,
         value: "AI",
@@ -167,4 +243,7 @@ export {
     TARGETS,
     IS_LIMITS,
     SECTIONS,
+    SELECT_SECTIONS,
+    IS_HIDES,
+    IS_REWARDUS,
 };

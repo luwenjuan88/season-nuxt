@@ -10,7 +10,7 @@
                         我是卢文娟，211研究生，web3的IT女
                     </div>
                     <div class="text-xs py-2">
-                        六年Java/Python程序员，区块链量化策略开发工程师，Solidity智能合约工程师；
+                        六年Java/Python程序员，区块链量化策略开发工程师，Solidity智能合约工程师，深圳行一社会员，法国九个亿投资学院会员；
                     </div>
                     <div class="text-xs py-2">
                         我的公众号：卢文娟的元宇宙探索之旅

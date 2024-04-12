@@ -47,7 +47,7 @@
                         @click="tabClick('Setstrategy')"
                         class="w-full cursor-pointer py-3 pl-8 text-sm hover:bg-orange-50"
                         :class="{
-                            'bg-orange-50 text-green-600':
+                            'bg-orange-50 text-red-600':
                                 activeTab == 'Setstrategy',
                         }"
                     >

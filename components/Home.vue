@@ -52,7 +52,262 @@
     </el-card>
     <el-card class="mx-4 my-4">
         <el-tabs tab-position="top" @tab-change="changeTab">
-            <el-tab-pane label="所有币种">
+            <el-tab-pane label="币安币种">
+                <el-table
+                    style="width: 100%; font-size: 12px"
+                    :data="baTokens"
+                    border
+                    stripe
+                >
+                    <el-table-column
+                        label="序号"
+                        type="index"
+                        width="50"
+                        align="center"
+                    />
+                    <el-table-column
+                        prop="platform"
+                        label="交易平台"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="tokenName"
+                        label="代币名称"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="price"
+                        label="当前价格"
+                        align="center"
+                    ></el-table-column>
+                    <!-- <el-table-column
+                        prop="rate"
+                        label="涨跌幅(%)"
+                        align="center"
+                    >
+                        <template slot-scope="{ row }"
+                            >{{
+                                row.rate && (row.rate * 100).toFixed(2)
+                            }}%</template
+                        >
+                    </el-table-column> -->
+                    <el-table-column
+                        width="200px"
+                        :formatter="dataFormat"
+                        prop="updateTime"
+                        label="更新时间"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="200px"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <el-button
+                                v-if="row.isUserToken"
+                                :key="1"
+                                type="text"
+                                size="small"
+                                disabled
+                            >
+                                收藏
+                            </el-button>
+                            <el-button
+                                v-else
+                                :key="2"
+                                type="text"
+                                size="small"
+                                @click="postUserToken(row)"
+                                >收藏</el-button
+                            >
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-pagination
+                    class="page"
+                    @current-change="handleBaChange"
+                    :current-page="baTokenPageInfo.pageNo"
+                    :page-size="baTokenPageInfo.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="baTokenPageInfo.dataSize"
+                >
+                </el-pagination>
+            </el-tab-pane>
+
+            <el-tab-pane label="欧易币种">
+                <el-table
+                    style="width: 100%; font-size: 12px"
+                    :data="okTokens"
+                    border
+                    stripe
+                >
+                    <el-table-column
+                        label="序号"
+                        type="index"
+                        width="50"
+                        align="center"
+                    />
+                    <el-table-column
+                        prop="platform"
+                        label="交易平台"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="tokenName"
+                        label="代币名称"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="price"
+                        label="当前价格"
+                        align="center"
+                    ></el-table-column>
+                    <!-- <el-table-column
+                        prop="rate"
+                        label="涨跌幅(%)"
+                        align="center"
+                    >
+                        <template slot-scope="{ row }"
+                            >{{
+                                row.rate && (row.rate * 100).toFixed(2)
+                            }}%</template
+                        >
+                    </el-table-column> -->
+                    <el-table-column
+                        width="200px"
+                        :formatter="dataFormat"
+                        prop="updateTime"
+                        label="更新时间"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="200px"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <el-button
+                                v-if="row.isUserToken"
+                                :key="1"
+                                type="text"
+                                size="small"
+                                disabled
+                            >
+                                收藏
+                            </el-button>
+                            <el-button
+                                v-else
+                                :key="2"
+                                type="text"
+                                size="small"
+                                @click="postUserToken(row)"
+                                >收藏</el-button
+                            >
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-pagination
+                    class="page"
+                    @current-change="handleOkChange"
+                    :current-page="okTokenPageInfo.pageNo"
+                    :page-size="okTokenPageInfo.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="okTokenPageInfo.dataSize"
+                >
+                </el-pagination>
+            </el-tab-pane>
+
+            <el-tab-pane label="火币币种">
+                <el-table
+                    style="width: 100%; font-size: 12px"
+                    :data="huobiTokens"
+                    border
+                    stripe
+                >
+                    <el-table-column
+                        label="序号"
+                        type="index"
+                        width="50"
+                        align="center"
+                    />
+                    <el-table-column
+                        prop="platform"
+                        label="交易平台"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="tokenName"
+                        label="代币名称"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="price"
+                        label="当前价格"
+                        align="center"
+                    ></el-table-column>
+                    <!-- <el-table-column
+                        prop="rate"
+                        label="涨跌幅(%)"
+                        align="center"
+                    >
+                        <template slot-scope="{ row }"
+                            >{{
+                                row.rate && (row.rate * 100).toFixed(2)
+                            }}%</template
+                        >
+                    </el-table-column> -->
+                    <el-table-column
+                        width="200px"
+                        :formatter="dataFormat"
+                        prop="updateTime"
+                        label="更新时间"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="200px"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <el-button
+                                v-if="row.isUserToken"
+                                :key="1"
+                                type="text"
+                                size="small"
+                                disabled
+                            >
+                                收藏
+                            </el-button>
+                            <el-button
+                                v-else
+                                :key="2"
+                                type="text"
+                                size="small"
+                                @click="postUserToken(row)"
+                                >收藏</el-button
+                            >
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-pagination
+                    class="page"
+                    @current-change="handleHuobiChange"
+                    :current-page="huobiTokenPageInfo.pageNo"
+                    :page-size="huobiTokenPageInfo.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="huobiTokenPageInfo.dataSize"
+                >
+                </el-pagination>
+            </el-tab-pane>
+
+            <el-tab-pane label="AI推送">
                 <el-table
                     style="width: 100%; font-size: 12px"
                     :data="pairTokens"
@@ -329,6 +584,15 @@ import {
     deleteUserToken,
 } from "../server/service/token";
 
+const baTokens = ref([]);
+const baTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
+
+const okTokens = ref([]);
+const okTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
+
+const huobiTokens = ref([]);
+const huobiTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
+
 const pairTokens = ref([]);
 const pairTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 
@@ -347,12 +611,21 @@ const dataFormat = (row: [], column: { property: number }) => {
 const changeTab = (val: number) => {
     console.log(val);
     if (val == 0) {
+        tabValue.value = "BA";
+        findBaListByPage();
+    } else if (val == 1) {
+        tabValue.value = "OK";
+        findOkListByPage();
+    } else if (val == 2) {
+        tabValue.value = "HUOBI";
+        findHuobiListByPage();
+    } else if (val == 3) {
         tabValue.value = "ALL";
         findTokenPairsByPage();
-    } else if (val == 1) {
+    } else if (val == 4) {
         tabValue.value = "GOOD";
         findGoodTokensByPage();
-    } else if (val == 2) {
+    } else if (val == 5) {
         tabValue.value = "USER";
         findUserTokensByPage();
     } else {
@@ -361,13 +634,34 @@ const changeTab = (val: number) => {
 };
 
 const findTokenList = () => {
-    if (tabValue.value == "ALL") {
+    if (tabValue.value == "BA") {
+        findBaListByPage();
+    } else if (tabValue.value == "OK") {
+        findOkListByPage();
+    } else if (tabValue.value == "HUOBI") {
+        findHuobiListByPage();
+    } else if (tabValue.value == "ALL") {
         findTokenPairsByPage();
     } else if (tabValue.value == "GOOD") {
         findGoodTokensByPage();
     } else if (tabValue.value == "USER") {
         findUserTokensByPage();
     }
+};
+
+const handleHuobiChange = (val: number) => {
+    huobiTokenPageInfo.value.pageNo = val;
+    findHuobiListByPage();
+};
+
+const handleOkChange = (val: number) => {
+    okTokenPageInfo.value.pageNo = val;
+    findOkListByPage();
+};
+
+const handleBaChange = (val: number) => {
+    baTokenPageInfo.value.pageNo = val;
+    findBaListByPage();
 };
 
 const handlePairTokenChange = (val: number) => {
@@ -383,6 +677,86 @@ const handleGoodTokenChange = (val: number) => {
 const handleUserTokenChange = (val: number) => {
     userTokenPageInfo.value.pageNo = val;
     findUserTokensByPage();
+};
+
+const findHuobiListByPage = () => {
+    findAllTokenPairsByPage(
+        { platform: "huobi" },
+        huobiTokenPageInfo.value
+    ).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                huobiTokens.value = [];
+            } else {
+                if (res.data) {
+                    huobiTokens.value = res.data.dataList;
+                    huobiTokenPageInfo.value = res.data;
+                }
+                useState("huobiTokens", () => {
+                    return res.data.dataList;
+                });
+            }
+        }
+    });
+};
+
+const findBaListByPage = () => {
+    findAllTokenPairsByPage(
+        { platform: "binance" },
+        baTokenPageInfo.value
+    ).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                baTokens.value = [];
+            } else {
+                if (res.data) {
+                    baTokens.value = res.data.dataList;
+                    baTokenPageInfo.value = res.data;
+                }
+                useState("baTokens", () => {
+                    return res.data.dataList;
+                });
+            }
+        }
+    });
+};
+
+const findOkListByPage = () => {
+    findAllTokenPairsByPage({ platform: "okex" }, okTokenPageInfo.value).then(
+        async (response) => {
+            if (response && response.data) {
+                let res = response.data;
+                console.log(res);
+                if (res.code != 0) {
+                    ElMessage({
+                        message: res.message,
+                        type: "error",
+                    });
+                    okTokens.value = [];
+                } else {
+                    if (res.data) {
+                        okTokens.value = res.data.dataList;
+                        okTokenPageInfo.value = res.data;
+                    }
+                    useState("okTokens", () => {
+                        return res.data.dataList;
+                    });
+                }
+            }
+        }
+    );
 };
 
 const findTokenPairsByPage = () => {

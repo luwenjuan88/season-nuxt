@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="交易日志" v-model="tradeDialogVisible" width="80%">
+    <!-- <el-dialog title="交易日志" v-model="tradeDialogVisible" width="80%">
         <div class="text-xs py-2">币种：{{ tradeInfo.instId }}</div>
         <el-row :gutter="20">
             <el-col :span="6"
@@ -190,6 +190,199 @@
                 </template>
             </el-table-column>
         </el-table>
+    </el-dialog> -->
+
+    <el-dialog title="仓位日志" v-model="posDialogVisible" width="80%">
+        <div class="text-xs py-2">币种：{{ tradeInfo.instId }}</div>
+        <el-row :gutter="20">
+            <el-col :span="6"
+                ><div class="grid-content">
+                    <div class="text-xs py-2">
+                        当前仓位：{{ valueFormat(tradeInfo.currentPos) }}
+                    </div>
+                    <div class="text-xs py-2">
+                        买入单数：{{ valueFormat(tradeInfo.buyNum) }}
+                    </div>
+                    <div class="text-xs py-2">
+                        卖出单数：{{ valueFormat(tradeInfo.sellNum) }}
+                    </div>
+                    <div class="text-xs py-2">
+                        买入均价：{{ valueFormat(tradeInfo.buyAvgPrice) }}
+                    </div>
+                    <div class="text-xs py-2">
+                        当前价格：{{ valueFormat(tradeInfo.currentPrice) }}
+                    </div>
+                </div></el-col
+            >
+            <el-col :span="8"
+                ><div class="grid-content">
+                    <div class="text-xs py-2">
+                        当前成本：{{ valueFormat(tradeInfo.currentBuy) }}U
+                    </div>
+                    <div class="text-xs py-2">
+                        买入金额：{{ valueFormat(tradeInfo.buyUsdt) }}U
+                    </div>
+                    <div class="text-xs py-2">
+                        已卖金额：{{ valueFormat(tradeInfo.sellUsdt) }}U
+                    </div>
+                    <div class="text-xs py-2">
+                        浮动盈利：{{ valueFormat(tradeInfo.toReward) }}U
+                    </div>
+                    <div class="text-xs py-2">
+                        待卖金额：{{ valueFormat(tradeInfo.toSell) }}U
+                    </div>
+                </div></el-col
+            >
+            <el-col :span="8">
+                <el-form
+                    label-position="right"
+                    label-width="70px"
+                    size="small"
+                    :model="addTradeForm"
+                >
+                    <el-form-item label="方 向">
+                        <el-select
+                            style="width: 100%"
+                            v-model="addTradeForm.side"
+                            @change="changeTradeValue($event)"
+                        >
+                            <el-option
+                                v-for="v in sideList"
+                                :key="v.id"
+                                :label="v.name"
+                                :value="v.value"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="价格">
+                        <el-input
+                            v-model="addTradeForm.price"
+                            :disabled="addTradeInfo.isSellAll"
+                        ></el-input>
+                    </el-form-item>
+
+                    <el-form-item v-if="addTradeInfo.ifbuy" label="数量(U)">
+                        <el-input v-model="addTradeForm.amountIn"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                        v-else-if="
+                            addTradeForm.strategyType == 'smile3' &&
+                            addTradeForm.side == 'sell'
+                        "
+                        label="数量(U)"
+                    >
+                        <el-input
+                            v-model="addTradeForm.amountOut"
+                            disabled
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item v-else label="数量(币)">
+                        <el-input
+                            v-model="addTradeForm.amountIn"
+                            disabled
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <div style="display: flex; justify-content: flex-end">
+                    <el-button
+                        v-if="addTradeInfo.isSellAll && tradeInfo.hasUnlocked"
+                        class="button"
+                        disabled
+                    >
+                        {{ addTradeInfo.addtradetext }}
+                    </el-button>
+                    <el-button
+                        v-else-if="addTradeForm.amountIn > 0"
+                        class="button"
+                        @click="addOneTrade(addTradeForm)"
+                        >{{ addTradeInfo.addtradetext }}</el-button
+                    ><el-button v-else class="button" disabled>
+                        {{ addTradeInfo.addtradetext }}
+                    </el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-table
+            :data="posLogs"
+            :row-class-name="tableRowClassName"
+            style="font-size: 12px"
+        >
+            <el-table-column
+                property="id"
+                label="日志ID"
+                width="80px"
+            ></el-table-column>
+            <el-table-column
+                property="createTime"
+                :formatter="dataFormat"
+                label="日期"
+                width="120px"
+            ></el-table-column>
+            <el-table-column
+                property="buyPrice"
+                label="买入价格"
+                width="100px"
+            ></el-table-column>
+            <el-table-column property="buyAmountOut" label="买入代币">
+                <template #default="{ row }">{{
+                    row.buyAmountOut && row.buyAmountOut.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column property="buyAmountIn" label="买入U">
+                <template #default="{ row }">{{
+                    row.buyAmountIn && row.buyAmountIn.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column
+                property="sellPrice"
+                label="卖出价格"
+                width="100px"
+            ></el-table-column>
+            <el-table-column property="sellAmountIn" label="卖出代币">
+                <template #default="{ row }">{{
+                    row.sellAmountIn && row.sellAmountIn.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column property="sellAmountOut" label="卖出U">
+                <template #default="{ row }">{{
+                    row.sellAmountOut && row.sellAmountOut.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column property="reward" label="盈利" width="80px">
+                <template #default="{ row }">{{
+                    row.reward && row.reward.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column property="remark" label="备注"></el-table-column>
+            <el-table-column
+                property="posStatus"
+                label="状态"
+                width="50px"
+            ></el-table-column>
+            <el-table-column
+                fixed="right"
+                label="操作"
+                width="80px"
+                align="center"
+            >
+                <template #default="{ row }">
+                    <el-button
+                        v-if="row.posStatus === 0"
+                        type="text"
+                        size="small"
+                        @click="sellOnePos(row)"
+                        >设置卖出</el-button
+                    >
+                    <el-button
+                        v-if="row.posStatus < 0"
+                        type="text"
+                        size="small"
+                        @click="cancelOnePosTrade(row)"
+                        >取消</el-button
+                    >
+                </template>
+            </el-table-column>
+        </el-table>
     </el-dialog>
 
     <el-card class="mx-4 my-4">
@@ -225,7 +418,20 @@
             class="mx-2 my-4 text-xs"
         >
             <el-option
-                v-for="item in sections"
+                v-for="item in SELECT_SECTIONS"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+            >
+            </el-option>
+        </el-select>
+        <el-select
+            v-model="strategyIsHide"
+            @change="changeOptionHide($event)"
+            class="mx-2 my-4 text-xs"
+        >
+            <el-option
+                v-for="item in IS_HIDES"
                 :key="item.id"
                 :label="item.label"
                 :value="item.value"
@@ -313,7 +519,7 @@
                         link
                         type="primary"
                         size="small"
-                        @click="getTradeInfo(row)"
+                        @click="getTradePosInfo(row)"
                         >交易</el-button
                     >
                 </template>
@@ -354,11 +560,19 @@ import {
     addTrade,
     findUserStrategyListByPage,
     getStrategyTradeInfo,
+    getStrategyPosInfo,
     getCurrentPrice,
     cancelPendingTrade,
     cancelLimitTrade,
+    cancelPosTrade,
 } from "../server/service/strategy";
-import { STATUS, STRATEGY_TYPES, IS_LIMITS } from "../server/config/vars";
+import {
+    STATUS,
+    STRATEGY_TYPES,
+    IS_LIMITS,
+    IS_HIDES,
+    SELECT_SECTIONS,
+} from "../server/config/vars";
 
 const router = useRouter();
 const emits = defineEmits(["updateValues"]);
@@ -373,36 +587,12 @@ const strategyPageInfo = ref({
 const strategyStatus = ref(0);
 const strategyIsLimit = ref(0);
 const strategySection = ref("All");
-const sections = ref([
-    {
-        id: 1,
-        value: "All",
-        label: "All",
-    },
-    {
-        id: 2,
-        value: "AI",
-        label: "AI",
-    },
-    {
-        id: 3,
-        value: "Depin",
-        label: "Depin",
-    },
-    {
-        id: 4,
-        value: "L2",
-        label: "L2",
-    },
-    {
-        id: 5,
-        value: "Game",
-        label: "Game",
-    },
-]);
+const strategyIsHide = ref(0);
 
 const tradeDialogVisible = ref(false);
 const tradeLogs = ref([]);
+const posDialogVisible = ref(false);
+const posLogs = ref([]);
 const tradeInfo = ref({
     id: 0,
     instId: "",
@@ -471,6 +661,12 @@ const changeOptionSection = (val: string) => {
     getStrategyList();
 };
 
+const changeOptionHide = (val: number) => {
+    console.log(val);
+    strategyIsHide.value = val;
+    getStrategyList();
+};
+
 const handleCurrentChange = (val: number) => {
     strategyPageInfo.value.pageNo = val;
     getStrategyList();
@@ -479,14 +675,12 @@ const handleCurrentChange = (val: number) => {
 const tableRowClassName = (cellValue: {
     row: { status: number; side: string };
 }) => {
-    if (cellValue.row.status === 20 || cellValue.row.status === 21) {
+    if (cellValue.row.posStatus === 2) {
         return "text-gray-200";
-    } else if (cellValue.row.side === "buy") {
-        return "";
-    } else if (cellValue.row.side === "sell") {
+    } else if (cellValue.row.posStatus === 1) {
         return "text-red-500";
-    } else if (cellValue.row.side === "sellAll") {
-        return "text-red-500";
+    } else if (cellValue.row.posStatus < 0) {
+        return "text-orange-400";
     }
     return "";
 };
@@ -579,6 +773,50 @@ const sellOne = (tradeLog: {
     }
 };
 
+const sellOnePos = (posLog: object) => {
+    addTradeForm.value = {
+        amountIn: posLog.buyAmountOut,
+        amountOut: posLog.buyAmountIn,
+        side: "sell",
+        price: "",
+        strategyId: tradeInfo.value.id,
+        strategyType: posLog.strategyType,
+        unlockId: posLog.id,
+    };
+    addTradeInfo.value = {
+        addtradetext: "减仓",
+        amounttext: "数量(币)",
+        ifbuy: false,
+        isSellAll: false,
+    };
+    sideList.value = [
+        { id: 2, name: "卖", value: "sell" },
+        { id: 3, name: "保护", value: "protect" },
+    ];
+    // 收回成本，这里算一下，后端也算一下
+    if (posLog.strategyType === "smile3") {
+        // let newAmount = tradeLog.amountIn / tradeInfo.value.currentPrice;
+        // addTradeForm.value.amountIn =
+        //     newAmount < tradeLog.lockedAmount
+        //         ? newAmount
+        //         : tradeLog.lockedAmount;
+        // 判断当前价格是否可以收回成本
+        if (tradeInfo.value.currentPrice > posLog.buyPrice) {
+            // 可以收回成本
+            sideList.value = [
+                { id: 2, name: "收回成本", value: "sell" }, // 暂时就用sell吧，用策略类型来判断是收回成本还是别的
+                { id: 3, name: "保护", value: "protect" },
+            ];
+        } else {
+            // 无法收回成本
+            sideList.value = [{ id: 3, name: "保护", value: "protect" }];
+            addTradeForm.value.side = "protect";
+        }
+
+        console.log(addTradeForm.value);
+    }
+};
+
 // 进入某个策略的详情
 const toStrategyInfo = (val: { id: number; strategyType: string }) => {
     // 向父页面传递数据
@@ -647,6 +885,68 @@ const getTradeInfo = (val: object) => {
     getPrice(val);
 };
 
+// 获取仓位详情
+const getTradePosInfo = (val: object) => {
+    getStrategyPosInfo(val).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code > 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                tradeInfo.value = {
+                    id: 0,
+                    instId: "",
+                    currentPos: 0.0,
+                    buyNum: 0.0,
+                    sellNum: 0.0,
+                    buyAvgPrice: 0.0,
+                    currentPrice: 0.0,
+                    currentBuy: 0.0,
+                    buyUsdt: 0.0,
+                    sellUsdt: 0.0,
+                    toReward: 0.0,
+                    toSell: 0.0,
+                    hasUnlocked: false,
+                };
+                posLogs.value = [];
+            } else {
+                if (res.data) {
+                    tradeInfo.value = res.data;
+                    posLogs.value = res.data.posLogs;
+                }
+                useState("tradeInfo", () => {
+                    return res.data;
+                });
+            }
+        }
+    });
+    posDialogVisible.value = true;
+    // 重新打开时，把参数重置
+    addTradeForm.value = {
+        amountIn: 0.0,
+        amountOut: 0.0,
+        price: "",
+        side: "buy",
+        strategyId: 0,
+        strategyType: "",
+        unlockId: 0,
+    };
+    sideList.value = [
+        { id: 1, name: "买", value: "buy" },
+        { id: 5, name: "清仓", value: "sellAll" },
+    ];
+    addTradeInfo.value = {
+        addtradetext: "加仓",
+        amounttext: "数量(U)",
+        ifbuy: true,
+        isSellAll: false,
+    };
+    getPrice(val);
+};
+
 // 获取当前价格
 const getPrice = (val: object) => {
     getCurrentPrice(val).then((response) => {
@@ -678,6 +978,7 @@ const getPrice = (val: object) => {
     });
 };
 
+// 提交订单
 const addOneTrade = (formData: object) => {
     formData.strategyId = tradeInfo.value.id;
     addTrade(formData).then(async (response) => {
@@ -694,7 +995,8 @@ const addOneTrade = (formData: object) => {
                     message: res.message,
                     type: "success",
                 });
-                getTradeInfo(tradeInfo.value);
+                //getTradeInfo(tradeInfo.value);
+                getTradePosInfo(tradeInfo.value);
             }
         }
     });
@@ -742,21 +1044,43 @@ const cancelOnePendingTrade = (tradeLog: object) => {
     });
 };
 
+// 取消仓位操作
+const cancelOnePosTrade = (posLog: object) => {
+    cancelPosTrade(posLog).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code > 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: "success",
+                });
+                getTradePosInfo(tradeInfo.value);
+            }
+        }
+    });
+};
+
 // 获取策略列表
 const getStrategyList = () => {
-    var searchObj;
+    var searchObj = {
+        status: strategyStatus.value,
+        isLimit: strategyIsLimit.value,
+        section: strategySection.value,
+        isHide: strategyIsHide.value,
+    };
     if (strategySection.value == "All") {
-        searchObj = {
-            status: strategyStatus.value,
-            isLimit: strategyIsLimit.value,
-        };
-    } else {
-        searchObj = {
-            status: strategyStatus.value,
-            isLimit: strategyIsLimit.value,
-            section: strategySection.value,
-        };
+        searchObj.section = null;
     }
+    if (strategyIsLimit.value == 1) {
+        searchObj.isHide = null;
+    }
+
     findUserStrategyListByPage(searchObj, strategyPageInfo.value).then(
         async (response) => {
             if (response && response.data) {

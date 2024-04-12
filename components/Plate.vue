@@ -2,9 +2,8 @@
     <el-card class="mx-4 my-4">
         <div class="text-sm py-3">板块精研</div>
         <div class="text-sm py-3">
-            这个部分想做一些板块的精细化研究，因为币市受板块轮动影响挺大的，如果能把这个部分做好，可以最大化的提高资金利用率
+            板块的精细化研究，因为币市受板块轮动影响挺大的，利用好板块热度调整仓位，可以最大化的提高资金利用率
         </div>
-        <div class="text-sm py-3">目前还在进行中。。。</div>
         <canvas
             ref="lineChart"
             style="height: 200px; width: 80%; margin-right: 10px"
@@ -137,7 +136,13 @@ const pairTokens = ref([]);
 const pairTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 const tabValue = ref("AI");
 
-const sectionInfo = ref({});
+const solSection = ref({});
+const aiSection = ref({});
+const depinSection = ref({});
+const l2Section = ref({});
+const rwaSection = ref({});
+const gameSection = ref({});
+const memeSection = ref({});
 
 const dataFormat = (row: [], column: { property: number }) => {
     return new Date(row[column.property]).toLocaleString();
@@ -206,8 +211,8 @@ const postUserToken = (val: object) => {
     });
 };
 
-const getSectionData = () => {
-    getSectionInfoMap().then(async (response) => {
+async function getSectionData() {
+    await getSectionInfoMap().then((response) => {
         if (response && response.data) {
             let res = response.data;
             console.log(res);
@@ -216,40 +221,87 @@ const getSectionData = () => {
                     message: res.message,
                     type: "error",
                 });
-                sectionInfo.value = {};
             } else {
                 if (res.data) {
-                    sectionInfo.value = res.data;
+                    solSection.value = res.data.Sol;
+                    aiSection.value = res.data.AI;
+                    depinSection.value = res.data.Depin;
+                    l2Section.value = res.data.L2;
+                    rwaSection.value = res.data.Rwa;
+                    gameSection.value = res.data.Game;
+                    memeSection.value = res.data.Meme;
                 }
-                useState("sectionInfo", () => {
-                    return res.data;
-                });
+                console.log(solSection.value);
             }
         }
     });
-};
+}
 
-onMounted(() => {
+onMounted(async () => {
     findTokenPairsByPage(tabValue.value);
-    getSectionData();
+    await getSectionData();
+
+    console.log("abccccc");
+    console.log(solSection.value);
+    console.log(solSection.value.temps);
 
     const ctx = lineChart.value.getContext("2d");
     const data = {
-        labels: ["j", "f", "m", "a", "m", "j", "j"],
+        labels: ["1", "2", "3", "4", "5", "6", "7"],
         datasets: [
             {
-                label: "test",
-                data: [0.3, 0.4, 0.9, 0.1, 0.3, 0.2, 0.8],
+                label: "Sol",
+                data: solSection.value.temps,
                 fill: false,
-                borderColor: "#3CEF20",
+                borderColor: "#CD5C5C",
                 tension: 0.4,
                 borderWidth: 1,
             },
             {
-                label: "test1",
-                data: [0.1, 0.5, 0.3, 0.4, 0.8, 0.5, 0.6],
+                label: "AI",
+                data: aiSection.value.temps,
                 fill: false,
-                borderColor: "#4CAF50",
+                borderColor: "#EE7942",
+                tension: 0.4, // 线条平滑度
+                borderWidth: 1, // 线条粗细
+            },
+            {
+                label: "L2",
+                data: l2Section.value.temps,
+                fill: false,
+                borderColor: "#FFA500",
+                tension: 0.4, // 线条平滑度
+                borderWidth: 1, // 线条粗细
+            },
+            {
+                label: "Depin",
+                data: depinSection.value.temps,
+                fill: false,
+                borderColor: "#2E8B57",
+                tension: 0.4, // 线条平滑度
+                borderWidth: 1, // 线条粗细
+            },
+            {
+                label: "Meme",
+                data: memeSection.value.temps,
+                fill: false,
+                borderColor: "#00CED1",
+                tension: 0.4, // 线条平滑度
+                borderWidth: 1, // 线条粗细
+            },
+            {
+                label: "Game",
+                data: gameSection.value.temps,
+                fill: false,
+                borderColor: "#0000EE",
+                tension: 0.4, // 线条平滑度
+                borderWidth: 1, // 线条粗细
+            },
+            {
+                label: "Rwa",
+                data: rwaSection.value.temps,
+                fill: false,
+                borderColor: "#7D26CD",
                 tension: 0.4, // 线条平滑度
                 borderWidth: 1, // 线条粗细
             },

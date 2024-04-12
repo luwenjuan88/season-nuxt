@@ -157,6 +157,23 @@ export function getStrategyTradeInfo(tradeInfo) {
     );
 }
 
+// 获取策略的仓位详情
+export function getStrategyPosInfo(tradeInfo) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.get(
+        BASE_URL +
+            "/season-quantity-service/strategy/getStrategyPosInfo?strategyId=" +
+            tradeInfo.id,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
 export function getCurrentPrice(tradeInfo) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));
@@ -166,6 +183,22 @@ export function getCurrentPrice(tradeInfo) {
             tradeInfo.apiKeyId +
             "&instId=" +
             tradeInfo.instId,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
+// 取消仓位订单
+export function cancelPosTrade(posLog) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.post(
+        BASE_URL + "/season-quantity-service/strategy/cancelPosTrade",
+        posLog,
         {
             headers: {
                 seasonUser: tokenObject.token,

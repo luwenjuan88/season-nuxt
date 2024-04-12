@@ -80,6 +80,16 @@
                 </template>
             </el-table-column>
             <el-table-column
+                prop="balanceUsdt"
+                label="USDT余额"
+                width="100"
+                align="center"
+            >
+                <template #default="{ row }">{{
+                    row.balanceUsdt && row.balanceUsdt.toFixed(2)
+                }}</template>
+            </el-table-column>
+            <el-table-column
                 fixed="right"
                 label="操作"
                 width="100"

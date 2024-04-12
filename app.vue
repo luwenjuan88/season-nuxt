@@ -19,5 +19,8 @@
 }
 </style>
 <template>
+    <head>
+        <link rel="icon" type="image/x-icon" href="/icon.png" />
+    </head>
     <NuxtPage />
 </template>

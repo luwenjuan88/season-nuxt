@@ -14,6 +14,20 @@
                     >
                         <el-form-item label="策略类型" required>
                             <el-select
+                                v-if="isUpdate"
+                                v-model="strategyForm.strategyType"
+                                :default-first-option="true"
+                                disabled
+                            >
+                                <el-option
+                                    v-for="v in STRATEGY_TYPES"
+                                    :key="v.id"
+                                    :label="v.name"
+                                    :value="v.value"
+                                ></el-option>
+                            </el-select>
+                            <el-select
+                                v-else
                                 v-model="strategyForm.strategyType"
                                 :default-first-option="true"
                             >
@@ -32,6 +46,20 @@
                         </el-form-item>
                         <el-form-item label="选择账号" required>
                             <el-select
+                                v-if="isUpdate"
+                                v-model="strategyForm.apiKeyId"
+                                :default-first-option="true"
+                                disabled
+                            >
+                                <el-option
+                                    v-for="v in accountList"
+                                    :key="v.id"
+                                    :label="v.platform + '-' + v.accountName"
+                                    :value="v.id"
+                                ></el-option>
+                            </el-select>
+                            <el-select
+                                v-else
                                 v-model="strategyForm.apiKeyId"
                                 :default-first-option="true"
                             >
@@ -45,6 +73,12 @@
                         </el-form-item>
                         <el-form-item label="代币名称" required>
                             <el-input
+                                v-if="isUpdate"
+                                disabled
+                                v-model="strategyForm.tokenName"
+                            ></el-input>
+                            <el-input
+                                v-else
                                 v-model="strategyForm.tokenName"
                             ></el-input>
                         </el-form-item>
@@ -275,6 +309,32 @@
                                 ></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="盈利币种">
+                            <el-select
+                                v-model="strategyForm.isRewardU"
+                                :default-first-option="true"
+                            >
+                                <el-option
+                                    v-for="v in IS_REWARDUS"
+                                    :key="v.id"
+                                    :label="v.label"
+                                    :value="v.value"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="盈利模式">
+                            <el-select
+                                v-model="strategyForm.isHide"
+                                :default-first-option="true"
+                            >
+                                <el-option
+                                    v-for="v in IS_HIDES"
+                                    :key="v.id"
+                                    :label="v.label"
+                                    :value="v.value"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-form>
                 </el-card>
             </el-col>
@@ -335,23 +395,21 @@
                             >{{ buttonText }}</el-button
                         >
                         <el-button
-                            v-if="buttonVisibale && strategyForm.status === 0"
+                            v-if="isUpdate && strategyForm.status === 0"
                             :key="3"
                             class="button"
                             @click="stopS(strategyId, strategyType)"
                             >停止</el-button
                         >
                         <el-button
-                            v-else-if="
-                                buttonVisibale && strategyForm.status !== 0
-                            "
+                            v-else-if="isUpdate && strategyForm.status !== 0"
                             :key="4"
                             class="button"
                             @click="restartS(strategyId, strategyType)"
                             >重启</el-button
                         >
                         <el-button
-                            v-if="buttonVisibale"
+                            v-if="isUpdate"
                             :key="5"
                             class="button"
                             @click="deleteS(strategyId, strategyType)"
@@ -381,6 +439,7 @@ import {
     ElRow,
     ElCol,
     ElPagination,
+    ElSwitch,
 } from "element-plus";
 import { stringify } from "leancloud-storage";
 import {
@@ -398,7 +457,7 @@ import {
     deleteApiAccount,
     getUserInfo,
 } from "../server/service/user";
-import { STRATEGY_TYPES } from "../server/config/vars";
+import { IS_HIDES, STRATEGY_TYPES, IS_REWARDUS } from "../server/config/vars";
 
 const emits = defineEmits(["updateValues"]);
 
@@ -425,6 +484,8 @@ const strategyForm = ref({
     unlockProfitRatio: "0.01", // 解套盈利比例
     tounlockId: "",
     status: 0,
+    isHide: 0,
+    isRewardU: 0,
 });
 
 const accountList = ref([]);
@@ -432,7 +493,7 @@ const toUnlockStrategyList = ref([]);
 const strategyId = ref(0);
 const strategyType = ref("");
 const buttonText = ref("提交");
-const buttonVisibale = ref(false);
+const isUpdate = ref(false);
 
 const postStrategy = (formData: object) => {
     addStrategy(formData).then(async (response) => {
@@ -618,7 +679,7 @@ onMounted(() => {
     console.log("====");
     // 关闭button开关
     buttonText.value = "提交";
-    buttonVisibale.value = false;
+    isUpdate.value = false;
     getAccounts();
     strategyId.value = props.activeStrategyId;
     strategyType.value = props.activeStrategyType;
@@ -629,7 +690,7 @@ onMounted(() => {
         getToUnlockListById(strategyId.value);
         // 打开button开关
         buttonText.value = "更新";
-        buttonVisibale.value = true;
+        isUpdate.value = true;
     } else {
         getToUnlockList();
     }
