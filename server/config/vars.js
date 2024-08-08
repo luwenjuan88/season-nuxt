@@ -50,12 +50,12 @@ const STRATEGY_TYPES = [
     { id: 1, name: "限价追踪", value: "limit" },
     { id: 2, name: "网格策略", value: "grid" },
     { id: 3, name: "马丁倍投", value: "double" },
-    { id: 4, name: "埋伏", value: "smile" },
-    { id: 5, name: "埋伏2", value: "smile2" },
-    { id: 5, name: "埋伏3", value: "smile3" },
-    { id: 6, name: "蚂蚁", value: "ant" },
-    { id: 7, name: "蚂蚁2", value: "ant2" },
-    { id: 8, name: "蚂蚁3", value: "ant3" },
+    //{ id: 4, name: "埋伏", value: "smile" },
+    //{ id: 5, name: "埋伏2", value: "smile2" },
+    { id: 6, name: "埋伏", value: "smile3" },
+    { id: 7, name: "蚂蚁", value: "ant" },
+    { id: 8, name: "蚂蚁2", value: "ant2" },
+    { id: 9, name: "蚂蚁3", value: "ant3" },
 ];
 
 const FLW_TYPES = [

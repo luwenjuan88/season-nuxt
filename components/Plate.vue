@@ -1,6 +1,7 @@
 <template>
     <el-card class="mx-4 my-4">
         <div class="text-sm py-3">板块精研</div>
+        <div class="text-sm py-3">数据来自猎狗AI机器人</div>
         <div class="text-sm py-3">
             板块的精细化研究，因为币市受板块轮动影响挺大的，利用好板块热度调整仓位，可以最大化的提高资金利用率
         </div>
@@ -118,13 +119,7 @@ import {
     ElTabPane,
     ElTabs,
 } from "element-plus";
-import {
-    addUserToken,
-    findAllTokenPairsByPage,
-    findAllGoodTokensByPage,
-    findTokenPairListByPage,
-    findUserTokenListByPage,
-} from "../server/service/token";
+import { addUserToken, findTokenPairListByPage } from "../server/service/token";
 import { SECTIONS } from "../server/config/vars";
 import { Chart, registerables } from "chart.js";
 import { getSectionInfoMap } from "../server/service/token.js";
@@ -189,7 +184,8 @@ const findTokenPairsByPage = (section: string) => {
 const postUserToken = (val: object) => {
     let tokenForm = {
         platform: val.platform,
-        tokenName: val.instId,
+        tokenName: val.tokenName,
+        instId: val.instId,
     };
     addUserToken(tokenForm).then(async (response) => {
         if (response && response.data) {

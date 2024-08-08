@@ -21,6 +21,11 @@
                 strategyForm.profitRatio
             }}），卖出全部仓位，等待下一次建仓
         </div>
+        <div class="text-xs py-2">
+            在任何时候，当价格下跌至（{{
+                strategyForm.protectPrice
+            }}），止损全部仓位，关闭策略
+        </div>
         <div class="text-blue-800 text-sm font-bold py-2">注：</div>
         <div class="text-xs py-2">（1）做好仓位管理，分散板块</div>
         <div class="text-xs py-2">（2）适用于比较确定的震荡行情</div>

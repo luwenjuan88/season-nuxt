@@ -1,5 +1,47 @@
 <template>
-    <el-card class="mx-4 my-4">
+    <el-dialog title="选择策略" v-model="selectStrategyVisable">
+        <div class="flex justify-center">
+            <el-form
+                :model="selectStrategyForm"
+                label-width="100px"
+                class="w-4/5"
+            >
+                <el-form-item label="策略类型">
+                    <el-select
+                        v-model="selectStrategyForm.strategyType"
+                        :default-first-option="true"
+                    >
+                        <el-option
+                            v-for="v in STRATEGY_TYPES"
+                            :key="v.id"
+                            :label="v.name"
+                            :value="v.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="代币对">
+                    <el-input
+                        v-model="selectStrategyForm.tokenName"
+                        autocomplete="off"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="价格">
+                    <el-input
+                        v-model="selectStrategyForm.basePrice"
+                        autocomplete="off"
+                    ></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div class="my-4 flex justify-center">
+            <el-button @click="selectStrategyVisable = false">取 消</el-button>
+            <el-button type="primary" @click="toStrategyInfo()"
+                >确 定</el-button
+            >
+        </div>
+    </el-dialog>
+
+    <!-- <el-card class="mx-4 my-4">
         <div class="text-sm py-3">最新资讯</div>
         <el-row :gutter="20">
             <el-col :span="10">
@@ -47,6 +89,51 @@
                         </div>
                     </div>
                 </el-card>
+            </el-col>
+        </el-row>
+    </el-card> -->
+    <el-card class="mx-4 my-4">
+        <div class="text-sm py-3">推荐视频</div>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <iframe
+                    src="//player.bilibili.com/player.html?aid=521003978&bvid=BV1FM411z7XJ&cid=918451924&p=1"
+                    frameborder="0"
+                    allowfullscreen
+                >
+                </iframe>
+                <div class="px-3">
+                    <span class="text-sm py-3"
+                        >币市投资如何为创业者/老板赋能？</span
+                    >
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <iframe
+                    src="//player.bilibili.com/player.html?aid=491877198&bvid=BV1mN411t78A&cid=1293173516&p=1"
+                    frameborder="0"
+                    allowfullscreen
+                >
+                </iframe>
+                <div class="px-3">
+                    <span class="text-sm py-3"
+                        >哪些人可以通过web3新型金融市场拿到结果？</span
+                    >
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <iframe
+                    src="//player.bilibili.com/player.html?aid=1903732540&bvid=BV19m411y71T&cid=1517757908&p=1"
+                    scrolling="no"
+                    border="0"
+                    frameborder="no"
+                    framespacing="0"
+                    allowfullscreen="true"
+                >
+                </iframe>
+                <div class="px-3">
+                    <span class="text-sm py-3">理解时代才能驾驭财富</span>
+                </div>
             </el-col>
         </el-row>
     </el-card>
@@ -478,6 +565,89 @@
                 </el-pagination
             ></el-tab-pane>
 
+            <el-tab-pane label="量化精选">
+                <el-table
+                    style="width: 100%; font-size: 12px"
+                    :data="suggestTokens"
+                    border
+                    stripe
+                >
+                    <el-table-column
+                        label="序号"
+                        type="index"
+                        width="50"
+                        align="center"
+                    />
+                    <el-table-column
+                        prop="platform"
+                        label="交易平台"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="tokenName"
+                        label="代币名称"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="price"
+                        label="当前价格"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="rate30"
+                        label="30min涨跌幅(%)"
+                        align="center"
+                    >
+                        <template #default="{ row }"
+                            >{{ (row.rate30 * 100).toFixed(2) }}%</template
+                        >
+                    </el-table-column>
+                    <el-table-column
+                        width="200px"
+                        :formatter="dataFormat"
+                        prop="updateTime"
+                        label="更新时间"
+                        align="center"
+                    ></el-table-column>
+                    <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="200px"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <el-button
+                                v-if="row.isUserToken"
+                                :key="1"
+                                type="text"
+                                size="small"
+                                disabled
+                            >
+                                收藏
+                            </el-button>
+                            <el-button
+                                v-else
+                                :key="2"
+                                type="text"
+                                size="small"
+                                @click="postUserToken(row)"
+                                >收藏</el-button
+                            >
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-pagination
+                    class="page"
+                    @current-change="handleSuggestTokenChange"
+                    :current-page="suggestTokenPageInfo.pageNo"
+                    :page-size="suggestTokenPageInfo.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="suggestTokenPageInfo.dataSize"
+                >
+                </el-pagination
+            ></el-tab-pane>
+
             <el-tab-pane label="我的收藏"
                 ><el-table
                     style="width: 100%; font-size: 12px"
@@ -532,8 +702,20 @@
                             <el-button
                                 type="text"
                                 size="small"
-                                @click="postUserToken(row)"
+                                @click="removeUserToken(row)"
                                 >取消收藏</el-button
+                            >
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        fixed="right"
+                        label="选择策略"
+                        width="100px"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <el-button size="small" @click="selectStrategy(row)"
+                                >设置策略</el-button
                             >
                         </template>
                     </el-table-column>
@@ -577,12 +759,21 @@ import {
 } from "element-plus";
 import {
     addUserToken,
-    findAllTokenPairsByPage,
+    findMarketTokenPairsByPage,
     findAllGoodTokensByPage,
     findTokenPairListByPage,
     findUserTokenListByPage,
     deleteUserToken,
 } from "../server/service/token";
+import { IS_HIDES, STRATEGY_TYPES, IS_REWARDUS } from "../server/config/vars";
+
+const selectStrategyVisable = ref(false);
+const selectStrategyForm = ref({
+    strategyType: "ant3",
+    tokenName: "",
+    basePrice: "",
+});
+const emits = defineEmits(["setValues"]);
 
 const baTokens = ref([]);
 const baTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
@@ -599,10 +790,35 @@ const pairTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 const goodTokens = ref([]);
 const goodTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 
+const suggestTokens = ref([]);
+const suggestTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
+
 const userTokens = ref([]);
 const userTokenPageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 
-const tabValue = ref("ALL");
+const tabValue = ref("BA");
+
+// 选择策略
+const selectStrategy = (val: object) => {
+    selectStrategyForm.value = {
+        strategyType: "ant",
+        tokenName: val.tokenName,
+        basePrice: val.price,
+    };
+    selectStrategyVisable.value = true;
+};
+
+// 进入某个策略的详情
+const toStrategyInfo = () => {
+    // 向父页面传递数据
+    emits(
+        "setValues",
+        "Setstrategy",
+        selectStrategyForm.value.strategyType,
+        selectStrategyForm.value.tokenName,
+        selectStrategyForm.value.basePrice
+    );
+};
 
 const dataFormat = (row: [], column: { property: number }) => {
     return new Date(row[column.property]).toLocaleString();
@@ -626,6 +842,9 @@ const changeTab = (val: number) => {
         tabValue.value = "GOOD";
         findGoodTokensByPage();
     } else if (val == 5) {
+        tabValue.value = "SUGGEST";
+        findSuggestTokensByPage();
+    } else if (val == 6) {
         tabValue.value = "USER";
         findUserTokensByPage();
     } else {
@@ -644,6 +863,8 @@ const findTokenList = () => {
         findTokenPairsByPage();
     } else if (tabValue.value == "GOOD") {
         findGoodTokensByPage();
+    } else if (tabValue.value == "SUGGEST") {
+        findSuggestTokensByPage();
     } else if (tabValue.value == "USER") {
         findUserTokensByPage();
     }
@@ -674,13 +895,18 @@ const handleGoodTokenChange = (val: number) => {
     findGoodTokensByPage();
 };
 
+const handleSuggestTokenChange = (val: number) => {
+    suggestTokenPageInfo.value.pageNo = val;
+    findSuggestTokensByPage();
+};
+
 const handleUserTokenChange = (val: number) => {
     userTokenPageInfo.value.pageNo = val;
     findUserTokensByPage();
 };
 
 const findHuobiListByPage = () => {
-    findAllTokenPairsByPage(
+    findMarketTokenPairsByPage(
         { platform: "huobi" },
         huobiTokenPageInfo.value
     ).then(async (response) => {
@@ -707,7 +933,7 @@ const findHuobiListByPage = () => {
 };
 
 const findBaListByPage = () => {
-    findAllTokenPairsByPage(
+    findMarketTokenPairsByPage(
         { platform: "binance" },
         baTokenPageInfo.value
     ).then(async (response) => {
@@ -734,29 +960,30 @@ const findBaListByPage = () => {
 };
 
 const findOkListByPage = () => {
-    findAllTokenPairsByPage({ platform: "okex" }, okTokenPageInfo.value).then(
-        async (response) => {
-            if (response && response.data) {
-                let res = response.data;
-                console.log(res);
-                if (res.code != 0) {
-                    ElMessage({
-                        message: res.message,
-                        type: "error",
-                    });
-                    okTokens.value = [];
-                } else {
-                    if (res.data) {
-                        okTokens.value = res.data.dataList;
-                        okTokenPageInfo.value = res.data;
-                    }
-                    useState("okTokens", () => {
-                        return res.data.dataList;
-                    });
+    findMarketTokenPairsByPage(
+        { platform: "okex" },
+        okTokenPageInfo.value
+    ).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                okTokens.value = [];
+            } else {
+                if (res.data) {
+                    okTokens.value = res.data.dataList;
+                    okTokenPageInfo.value = res.data;
                 }
+                useState("okTokens", () => {
+                    return res.data.dataList;
+                });
             }
         }
-    );
+    });
 };
 
 const findTokenPairsByPage = () => {
@@ -811,6 +1038,32 @@ const findGoodTokensByPage = () => {
     );
 };
 
+const findSuggestTokensByPage = () => {
+    findTokenPairListByPage({ isSuggest: 1 }, suggestTokenPageInfo.value).then(
+        async (response) => {
+            if (response && response.data) {
+                let res = response.data;
+                console.log(res);
+                if (res.code != 0) {
+                    ElMessage({
+                        message: res.message,
+                        type: "error",
+                    });
+                    suggestTokens.value = [];
+                } else {
+                    if (res.data) {
+                        suggestTokens.value = res.data.dataList;
+                        suggestTokenPageInfo.value = res.data;
+                    }
+                    useState("suggestTokens", () => {
+                        return res.data.dataList;
+                    });
+                }
+            }
+        }
+    );
+};
+
 const findUserTokensByPage = () => {
     findUserTokenListByPage({}, userTokenPageInfo.value).then(
         async (response) => {
@@ -840,7 +1093,8 @@ const findUserTokensByPage = () => {
 const postUserToken = (val: object) => {
     let tokenForm = {
         platform: val.platform,
-        tokenName: val.instId,
+        tokenName: val.tokenName,
+        instId: val.instId,
     };
     addUserToken(tokenForm).then(async (response) => {
         if (response && response.data) {

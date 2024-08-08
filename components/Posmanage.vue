@@ -10,19 +10,13 @@
                     autocomplete="off"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="抄底计划">
+            <el-form-item label="建仓区间">
                 <el-input
                     v-model="tokenForm.buyPlan"
                     autocomplete="off"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="保护计划">
-                <el-input
-                    v-model="tokenForm.protectPlan"
-                    autocomplete="off"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="资金">
+            <el-form-item label="资金(U)">
                 <el-input
                     v-model="tokenForm.maxAmount"
                     autocomplete="off"
@@ -34,27 +28,9 @@
                     autocomplete="off"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="本金管理">
-                <el-input
-                    v-model="tokenForm.principal"
-                    autocomplete="off"
-                ></el-input>
-            </el-form-item>
             <el-form-item label="星级">
                 <el-input
                     v-model="tokenForm.star"
-                    autocomplete="off"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="支撑位">
-                <el-input
-                    v-model="tokenForm.support"
-                    autocomplete="off"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="压力位">
-                <el-input
-                    v-model="tokenForm.stress"
                     autocomplete="off"
                 ></el-input>
             </el-form-item>
@@ -148,7 +124,7 @@
             </el-table-column>
             <el-table-column
                 prop="buyPlan"
-                label="抄底价格"
+                label="建仓区间"
                 width="100"
                 align="center"
             >
@@ -164,8 +140,8 @@
                 >
             </el-table-column>
             <el-table-column
-                prop="planRatio"
-                label="资金占比"
+                prop="maxAmount"
+                label="资金(U)"
                 width="100"
                 align="center"
             >
@@ -226,6 +202,77 @@
         >
         </el-pagination>
     </el-card>
+
+    <el-card class="mx-4 my-4">
+        <div class="text-sm py-3">本金仓位</div>
+        <el-table :data="posBenjin" border style="width: 100%; font-size: 12px">
+            <el-table-column
+                property="updateTime"
+                :formatter="dataFormat"
+                label="更新日期"
+                width="200px"
+                align="center"
+            ></el-table-column>
+            <el-table-column
+                prop="instId"
+                label="代币对"
+                width="150"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="usdtAmount"
+                label="U仓位"
+                width="200"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="amount"
+                label="币仓位"
+                width="200"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column prop="remark" label="备注" align="center">
+            </el-table-column>
+        </el-table>
+    </el-card>
+    <el-card class="mx-4 my-4">
+        <div class="text-sm py-3">利润仓位</div>
+        <el-table :data="posProfit" border style="width: 100%; font-size: 12px">
+            <el-table-column
+                property="updateTime"
+                :formatter="dataFormat"
+                label="更新日期"
+                width="200px"
+                align="center"
+            ></el-table-column>
+            <el-table-column
+                prop="instId"
+                label="代币对"
+                width="150"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="usdtAmount"
+                label="U仓位"
+                width="200"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="amount"
+                label="币仓位"
+                width="200"
+                align="center"
+            >
+            </el-table-column>
+            <el-table-column prop="remark" label="备注" align="center">
+            </el-table-column>
+        </el-table>
+    </el-card>
 </template>
 
 <script setup lang="ts">
@@ -254,12 +301,20 @@ import {
     postPosManage,
     deletePosManage,
     statsUserStrategy,
+    findUserPosList,
 } from "../server/service/posmanage";
 
 // 机器人列表
 const posManageList = ref([]);
 const posManagePageInfo = ref({ pageNo: 1, pageSize: 10, dataSize: 100 });
 const userStats = ref({});
+
+const posBenjin = ref([]);
+const posProfit = ref([]);
+
+const dataFormat = (row: [], column: { property: number }) => {
+    return new Date(row[column.property]).toLocaleString();
+};
 
 // 添加和编辑仓位
 const tokenForm = ref({
@@ -307,6 +362,52 @@ const editPosManage = (val: object) => {
     dialogInfo.value.tokenButtonText = "更 新";
     dialogInfo.value.tokenTileText = "编辑币种";
     dialogInfo.value.dialogFormVisible = true;
+};
+
+const findBenjinPos = () => {
+    findUserPosList(0).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                posBenjin.value = [];
+            } else {
+                if (res.data) {
+                    posBenjin.value = res.data;
+                }
+                useState("posBenjin", () => {
+                    return res.data;
+                });
+            }
+        }
+    });
+};
+
+const findProfitPos = () => {
+    findUserPosList(1).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code != 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+                posProfit.value = [];
+            } else {
+                if (res.data) {
+                    posProfit.value = res.data;
+                }
+                useState("posProfit", () => {
+                    return res.data;
+                });
+            }
+        }
+    });
 };
 
 const findUserPosManagesByPage = () => {
@@ -402,5 +503,7 @@ const statsAll = () => {
 onMounted(() => {
     statsAll();
     findUserPosManagesByPage();
+    findBenjinPos();
+    findProfitPos();
 });
 </script>

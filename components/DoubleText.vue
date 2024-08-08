@@ -23,9 +23,9 @@
         <div class="text-xs py-2">（1）该策略谨慎买山寨</div>
         <div class="text-xs py-2">（2）做好仓位管理，分散板块</div>
         <div class="text-xs py-2">（3）适用于你看好的币种，需要埋伏的情况</div>
-        <div class="text-xs py-2">
+        <!-- <div class="text-xs py-2">
             （4）初期埋伏不设止损，涨起来后要上移保护，留住利润
-        </div>
+        </div> -->
     </div>
 </template>
 

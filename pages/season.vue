@@ -106,7 +106,7 @@
                     >
                         邀请
                     </div>
-                    <div
+                    <!-- <div
                         @click="tabClick('Author')"
                         class="w-full cursor-pointer py-3 pl-8 text-sm hover:bg-orange-50"
                         :class="{
@@ -114,7 +114,7 @@
                         }"
                     >
                         作者介绍
-                    </div>
+                    </div> -->
                     <!-- <div
                         @click="tabClick('Customer')"
                         class="w-full cursor-pointer py-3 pl-8 text-sm hover:bg-orange-50"
@@ -203,7 +203,10 @@
                     :activeTab="activeTab"
                     :activeStrategyId="activeStrategyId"
                     :activeStrategyType="activeStrategyType"
+                    :activeStrategyToken="activeStrategyToken"
+                    :activeStrategyPrice="activeStrategyPrice"
                     @updateValues="handleUpdateValues"
+                    @setValues="handleSetValues"
                 ></component>
             </div>
         </div>
@@ -249,8 +252,10 @@ const userInfo = ref({ username: "", inviteCode: "" });
 
 const activeTab = ref("Home");
 const activeStrategyId = ref(0);
-const activeStrategyType = ref("grid");
+const activeStrategyType = ref("ant3");
 const currentComponent = ref(Home);
+const activeStrategyToken = ref("BTC");
+const activeStrategyPrice = ref(0);
 
 onMounted(() => {
     loadUserInfo();
@@ -298,6 +303,48 @@ const handleUpdateValues = (newTab: string, newId: number, newType: string) => {
     console.log(newTab);
     console.log(newId);
     console.log(newType);
+    if (newTab === "Home") {
+        currentComponent.value = Home;
+    } else if (newTab === "Plate") {
+        currentComponent.value = Plate;
+    } else if (newTab === "Setstrategy") {
+        currentComponent.value = Setstrategy;
+    } else if (newTab === "Autorobot") {
+        currentComponent.value = Autorobot;
+    } else if (newTab === "Invite") {
+        currentComponent.value = Invite;
+    } else if (newTab === "Myprofile") {
+        currentComponent.value = Myprofile;
+    } else if (newTab === "Mystrategy") {
+        currentComponent.value = Mystrategy;
+    } else if (newTab === "Posmanage") {
+        currentComponent.value = Posmanage;
+    } else if (newTab === "Subscribe") {
+        currentComponent.value = Subscribe;
+    } else if (newTab === "Author") {
+        currentComponent.value = Author;
+    }
+    // else if (newTab === "Customer") {
+    //     currentComponent.value = Customer;
+    // } else if (newTab === "Partner") {
+    //     currentComponent.value = Partner;
+    // }
+};
+
+const handleSetValues = (
+    newTab: string,
+    newType: string,
+    newToken: string,
+    newPrice: number
+) => {
+    activeTab.value = newTab;
+    activeStrategyType.value = newType;
+    activeStrategyToken.value = newToken;
+    activeStrategyPrice.value = newPrice;
+    console.log(newTab);
+    console.log(newType);
+    console.log(newToken);
+    console.log(newPrice);
     if (newTab === "Home") {
         currentComponent.value = Home;
     } else if (newTab === "Plate") {

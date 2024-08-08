@@ -119,6 +119,35 @@ export function addStrategy(data) {
     );
 }
 
+export function addNewRound(data) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.post(
+        BASE_URL + "/season-quantity-service/strategy/addNewRound",
+        data,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
+export function getStrategyRounds() {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.get(
+        BASE_URL + "/season-quantity-service/strategy/getStrategyRounds",
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
 export function findUserStrategyListByPage(data, pageObject) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));
@@ -208,6 +237,22 @@ export function cancelPosTrade(posLog) {
     );
 }
 
+// 删除仓位
+export function deletePosTrade(posLog) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.post(
+        BASE_URL + "/season-quantity-service/strategy/deletePosTrade",
+        posLog,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
 export function cancelPendingTrade(tradeLog) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));
@@ -244,6 +289,21 @@ export function addTrade(tradeForm) {
     return axios.post(
         BASE_URL + "/season-quantity-service/strategy/addTrade",
         tradeForm,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
+export function setPos(posForm) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.post(
+        BASE_URL + "/season-quantity-service/strategy/setPos",
+        posForm,
         {
             headers: {
                 seasonUser: tokenObject.token,

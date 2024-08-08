@@ -2,6 +2,22 @@ import axios from "axios";
 import { getCookie } from "~/assets/js/utils/tools";
 import { BASE_URL } from "../config/vars";
 
+export function findUserPosList(posType) {
+    const res = getCookie("__token");
+    const tokenObject = JSON.parse(decodeURIComponent(res));
+    return axios.get(
+        BASE_URL +
+            "/season-quantity-service/strategy/findUserPosList?posType=" +
+            posType,
+        {
+            headers: {
+                seasonUser: tokenObject.token,
+                apifoxToken: "htblRLQX8ZHzgh7rLZMYF3DH0fBgrl78",
+            },
+        }
+    );
+}
+
 export function findUserPosManageListByPage(data, pageObject) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));

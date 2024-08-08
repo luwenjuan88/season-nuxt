@@ -60,7 +60,8 @@ export function addUserToken(data) {
     );
 }
 
-export function findAllTokenPairsByPage(data, pageObject) {
+// 获取所有的市场币种
+export function findMarketTokenPairsByPage(data, pageObject) {
     const res = getCookie("__token");
     const tokenObject = JSON.parse(decodeURIComponent(res));
     return axios.post(

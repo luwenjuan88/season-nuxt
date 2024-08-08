@@ -22,8 +22,15 @@
         <div class="text-xs py-2">
             在任何时候，当价格上涨，最后一仓的盈利达到（{{
                 strategyForm.profitRatio
-            }}），则直接止盈收回仓位成本；
+            }}），则止盈仓位；
         </div>
+        <div class="text-xs py-2">
+            可以在交易详情中，针对每个具体仓位设置风险控制参数；
+        </div>
+        <div class="text-blue-800 text-sm font-bold py-2">注：</div>
+        <div class="text-xs py-2">（1）该策略谨慎买山寨</div>
+        <div class="text-xs py-2">（2）做好仓位管理，分散板块</div>
+        <div class="text-xs py-2">（3）适用于你看好的币种，需要埋伏的情况</div>
     </div>
 </template>
 

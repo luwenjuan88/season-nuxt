@@ -71,10 +71,10 @@
                             :default-first-option="true"
                         >
                             <el-option
-                                v-for="v in strategyTypes"
+                                v-for="v in STRATEGY_TYPES"
                                 :key="v.id"
-                                :label="v.desc"
-                                :value="v.name"
+                                :label="v.name"
+                                :value="v.value"
                             ></el-option>
                         </el-select>
                     </el-form-item>
@@ -241,7 +241,7 @@ import {
     ElDatePicker,
 } from "element-plus";
 import { getCookie, setCookie } from "~/assets/js/utils/tools";
-import { SIGNALS, TARGETS } from "../server/config/vars";
+import { SIGNALS, TARGETS, STRATEGY_TYPES } from "../server/config/vars";
 import {
     findUserListByPage,
     addRobot,
@@ -260,7 +260,7 @@ const robotForm = ref({
     targetInfo: "goodToken",
     status: 0,
     isSimulate: 1,
-    strategyType: "smile",
+    strategyType: "ant3",
 });
 const robotDialogInfo = ref({
     buttonText: "提 交",

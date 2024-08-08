@@ -249,6 +249,17 @@
                             ></el-input>
                         </el-form-item>
 
+                        <!-- 止损价格 -->
+                        <el-form-item
+                            v-if="strategyForm.strategyType == 'grid'"
+                            label="止损价格"
+                            required
+                        >
+                            <el-input
+                                v-model="strategyForm.protectPrice"
+                            ></el-input>
+                        </el-form-item>
+
                         <!-- 解套逻辑 -->
                         <el-form-item
                             v-if="
@@ -322,7 +333,7 @@
                                 ></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="盈利模式">
+                        <!-- <el-form-item label="盈利模式">
                             <el-select
                                 v-model="strategyForm.isHide"
                                 :default-first-option="true"
@@ -334,6 +345,17 @@
                                     :value="v.value"
                                 ></el-option>
                             </el-select>
+                        </el-form-item> -->
+                        <el-form-item
+                            v-if="
+                                strategyForm.strategyType === 'smile' ||
+                                strategyForm.strategyType === 'smile2' ||
+                                strategyForm.strategyType === 'smile3'
+                            "
+                            label="轮"
+                            required
+                        >
+                            <el-input v-model="strategyForm.round"></el-input>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -415,6 +437,14 @@
                             @click="deleteS(strategyId, strategyType)"
                             >删除</el-button
                         >
+                        <el-button
+                            v-if="isUpdate"
+                            :key="6"
+                            type="success"
+                            class="button"
+                            @click="addNewRoundStrategy(strategyForm)"
+                            >加轮</el-button
+                        >
                     </div>
                 </el-card>
             </el-col>
@@ -450,6 +480,7 @@ import {
     deleteStrategy,
     getToUnlockStrategyList,
     getToUnlockStrategyListById,
+    addNewRound,
 } from "../server/service/strategy";
 import {
     getApiAccounts,
@@ -466,19 +497,21 @@ const props = defineProps({
     activeTab: String,
     activeStrategyId: Number,
     activeStrategyType: Number,
+    activeStrategyToken: String,
+    activeStrategyPrice: Number,
 });
 
 const strategyForm = ref({
-    strategyType: "smile3",
+    strategyType: "ant3",
     strategyName: "",
     apiKeyId: "",
     tokenName: "",
-    gridNum: "7", // 最大加仓次数
-    amountStr: "200,200,200,300,300,300,400", // 单次加仓的数量，U
+    gridNum: "10", // 最大加仓次数
+    amountStr: "100,100,100,200,200,200,300,300,300,300", // 单次加仓的数量，U
     basePrice: "", // 初始建仓价格
-    priceRatioStr: "1,1,1,2,2,2,3", // 价格下跌间距
+    priceRatioStr: "1,1,1,2,2,2,4,4,4,4", // 价格下跌间距
     backRatio: "", // 回调比例
-    profitRatio: "2", // 盈利比例
+    profitRatio: "1", // 盈利比例
     unlockStart: "6", // 从第几仓开启解套逻辑
     unlockBackRatio: "0.03", // 解套回调比例
     unlockProfitRatio: "0.01", // 解套盈利比例
@@ -497,6 +530,28 @@ const isUpdate = ref(false);
 
 const postStrategy = (formData: object) => {
     addStrategy(formData).then(async (response) => {
+        if (response && response.data) {
+            let res = response.data;
+            console.log(res);
+            if (res.code > 0) {
+                ElMessage({
+                    message: res.message,
+                    type: "error",
+                });
+            } else {
+                ElMessage({
+                    message: res.message,
+                    type: "success",
+                });
+                // todo 进入我的策略页面
+                emits("updateValues", "Mystrategy", "", "");
+            }
+        }
+    });
+};
+
+const addNewRoundStrategy = (formData: object) => {
+    addNewRound(formData).then(async (response) => {
         if (response && response.data) {
             let res = response.data;
             console.log(res);
@@ -692,6 +747,9 @@ onMounted(() => {
         buttonText.value = "更新";
         isUpdate.value = true;
     } else {
+        strategyForm.value.strategyType = props.activeStrategyType;
+        strategyForm.value.tokenName = props.activeStrategyToken;
+        strategyForm.value.basePrice = props.activeStrategyPrice;
         getToUnlockList();
     }
 });
