@@ -502,14 +502,14 @@ const props = defineProps({
 });
 
 const strategyForm = ref({
-    strategyType: "ant3",
+    strategyType: "smile3",
     strategyName: "",
     apiKeyId: "",
     tokenName: "",
     gridNum: "10", // 最大加仓次数
     amountStr: "100,100,100,200,200,200,300,300,300,300", // 单次加仓的数量，U
     basePrice: "", // 初始建仓价格
-    priceRatioStr: "1,1,1,2,2,2,4,4,4,4", // 价格下跌间距
+    priceRatioStr: "1,1,2,2,2,2,4,4,4,4", // 价格下跌间距
     backRatio: "", // 回调比例
     profitRatio: "1", // 盈利比例
     unlockStart: "6", // 从第几仓开启解套逻辑
